@@ -28,7 +28,7 @@ compile() {
 }
 
 copy_compiled_files() {
-  cp "$SRCDIR"/*.class "$CLASSDIR"/
+  mv "$SRCDIR"/*.class "$CLASSDIR"/
 }
 
 
