@@ -1,0 +1,5 @@
+# Google Drive files
+**/*.ini
+
+# java specific
+**/*.class
