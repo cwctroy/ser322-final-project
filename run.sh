@@ -13,10 +13,10 @@ setup() {
   CLASSDIR="$DIR/classes/ser322"
   
   ## DB info ##
-  DBNAME=""
-  DBUSER=""
-  DBPSWD=""
-  DBDRIVER=""
+  URL="jdbc:mysql://localhost/sports?autoReconnect=true&useSSL=false&useLegacyDatetimeCode=false&&serverTimezone=America/New_York"
+  DBUSER="root"
+  DBPSWD="root"
+  DBDRIVER="com.mysql.cj.jdbc.Driver"
 
   PROGROMNAME="DBDriver"
 
@@ -33,7 +33,7 @@ copy_compiled_files() {
 
 
 run() {
-java -cp "lib/mysql-connector-java-8.0.21.jar:"classes "ser322.DBDriver" "arg1 arg2"
+java -cp "lib/mysql-connector-java-8.0.21.jar:"classes "ser322.DBDriver" "$URL" "$DBUSER" "$DBPSWD" "$DBDRIVER"
 }
 
 ## MAIN ##
