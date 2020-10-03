@@ -33,7 +33,7 @@ copy_compiled_files() {
 
 
 run() {
-java -cp classes "ser322.DBDriver" "arg1 arg2"
+java -cp "lib/mysql-connector-java-8.0.21.jar:"classes "ser322.DBDriver" "arg1 arg2"
 }
 
 ## MAIN ##
