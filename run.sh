@@ -1,3 +1,10 @@
+#! /bin/bash
+#
+# This script compiles all java files, moves them into the classes dir
+# and then calls main with two sample args
+# 
+
+
 setup() {
 
   ## Path info ##
