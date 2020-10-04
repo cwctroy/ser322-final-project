@@ -16,7 +16,7 @@ public class DBDriver {
 	public static String user;
 	public static String password;
 	public static String driver;
-	public static String query;
+	public static String[] query;
 
 	public static final String[] TABLES = {"CITY", "TEAM", "PLAYER", "GAME", "SCORE"};
 
@@ -41,11 +41,11 @@ public class DBDriver {
 		// Main control loop
 		do {
 			System.out.println("Please input your query (q to exit)");
-			query = in.nextLine();
+			query = in.nextLine().split(" ");
 
-			query = query.toUpperCase();
+			query[0] = query[0].toUpperCase();
 
-			switch (query) {
+			switch (query[0]) {
 				case ("Q") :{ 
 					System.out.println("Exiting");
 				}
@@ -61,11 +61,21 @@ public class DBDriver {
 				}
 				break;
 
+				case ("LIST") : {
+					if (query.length != 2) {
+						System.out.println("Incorrect format, please enter: list <tableName>");
+					}
+					else {
+						ListTable(query[1]);
+					}
+				}
+				break;
+
 				default: {
 					System.out.println("Unrecognized query, please try again");
 				} break;
 			}
-		} while (! query.equalsIgnoreCase("Q"));
+		} while (! query[0].equalsIgnoreCase("Q"));
 		System.exit(0);
 	}
 
@@ -117,7 +127,7 @@ public class DBDriver {
 		}
 
 		System.out.println(
-			"You can use the following commands: \n "
+			"You can use the following commands: \n"
 			+ "list, add, delete\n"
 			+ "followed by the table you wish to access.\n"
 			+ "You can also type your own SQL query"
@@ -169,24 +179,49 @@ public class DBDriver {
 	}
 
 	// LIST ALL IN TABLE
-	public static void ListCity() {
-		System.out.println("Function not yet implemented");
+	public static void ListTable(String table) {
+		ResultSet rs = null;
+		ResultSetMetaData md = null;
+		Statement stmt = null;
+		Connection conn = null;
+
+		int numColumns;
+
+		try {
+			Class.forName(driver);
+
+			conn = DriverManager.getConnection(url, user, password);
+
+			stmt = conn.createStatement();
+
+			rs = stmt.executeQuery("Select * from " + table + ";");
+			md = rs.getMetaData();
+			numColumns = md.getColumnCount();
+
+			while (rs.next()) {
+				for (int i = 1; i <= numColumns; i++) {
+					System.out.print(rs.getString(i) + "\t");
+				}
+				System.out.println();
+			}
+		}
+		catch (Exception exc) {
+			exc.printStackTrace();
+		}
+		finally {  
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+				if (conn != null)
+					conn.close();
+			}
+			catch (SQLException se) {
+				se.printStackTrace();
+			}
+		}
 	}
 
-	public static void ListTeam() {
-		System.out.println("Function not yet implemented");
-	}
-
-	public static void ListPlayer() {
-		System.out.println("Function not yet implemented");
-	}
-
-	public static void ListGame() {
-		System.out.println("Function not yet implemented");
-	}
-
-	public static void ListScore() {
-		System.out.println("Function not yet implemented");
-	}
 
 }
