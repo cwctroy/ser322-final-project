@@ -72,7 +72,7 @@ public class DBDriver {
 				break;
 
 				default: {
-					System.out.println("Unrecognized query, please try again");
+					System.out.println("Unrecognized query, please try again, or type help to see a list of accepted commands");
 				} break;
 			}
 		} while (! query[0].equalsIgnoreCase("Q"));
