@@ -18,6 +18,8 @@ public class DBDriver {
 	public static String driver;
 	public static String query;
 
+	public static final String[] TABLES = {"CITY", "TEAM", "PLAYER", "GAME", "SCORE"};
+
 	public static Scanner in;
 
 	public static void main(String[] args) {
@@ -52,6 +54,12 @@ public class DBDriver {
 				case ("TEST") : {
 					TestQuery();
 				} break;
+
+				case ("HELP") : 
+				case ("USAGE") :{
+					PrintUsage();
+				}
+				break;
 
 				default: {
 					System.out.println("Unrecognized query, please try again");
@@ -100,6 +108,85 @@ public class DBDriver {
 				se.printStackTrace();
 			}
 		}
+	}
+
+	public static void PrintUsage() {
+		System.out.println("This database has the following tables: ");
+		for (String table : TABLES) {
+			System.out.println(table);
+		}
+
+		System.out.println(
+			"You can use the following commands: \n "
+			+ "list, add, delete\n"
+			+ "followed by the table you wish to access.\n"
+			+ "You can also type your own SQL query"
+		);
+	}
+
+	// INSERT FUNCTIONS
+	public static void InsertCity() {
+		System.out.println("Function not yet implemented");
+	}
+	
+	public static void InsertTeam() {
+		System.out.println("Function not yet implemented");
+	}
+
+
+	public static void InsertPlayer() {
+		System.out.println("Function not yet implemented");
+	}
+
+	public static void InsertGame() {
+		System.out.println("Function not yet implemented");
+	}
+
+	public static void InsertScore() {
+		System.out.println("Function not yet implemented");
+	}
+
+	//DELETE FUNCTIONS
+	public static void DeleteCity() {
+		System.out.println("Function not yet implemented");
+	}
+
+	public static void DeleteTeam() {
+		System.out.println("Function not yet implemented");
+	}
+
+	public static void DeletePlayer() {
+		System.out.println("Function not yet implemented");
+	}
+
+
+	public static void DeleteGame() {
+		System.out.println("Function not yet implemented");
+	}
+
+	public static void DeleteScore() {
+		System.out.println("Function not yet implemented");
+	}
+
+	// LIST ALL IN TABLE
+	public static void ListCity() {
+		System.out.println("Function not yet implemented");
+	}
+
+	public static void ListTeam() {
+		System.out.println("Function not yet implemented");
+	}
+
+	public static void ListPlayer() {
+		System.out.println("Function not yet implemented");
+	}
+
+	public static void ListGame() {
+		System.out.println("Function not yet implemented");
+	}
+
+	public static void ListScore() {
+		System.out.println("Function not yet implemented");
 	}
 
 }
