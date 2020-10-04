@@ -11,6 +11,13 @@ setup() {
   DIR=$(pwd)
   SRCDIR="$DIR/src/ser322"
   CLASSDIR="$DIR/classes/ser322"
+
+  if ! [ -d "$CLASSDIR" ]; then
+    if ! [ -d "$DIR"/classes ]; then
+      mkdir "$DIR"/classes
+    fi
+    mkdir "$CLASSDIR"
+  fi
   
   ## DB info ##
   URL="jdbc:mysql://localhost/sports?autoReconnect=true&useSSL=false&useLegacyDatetimeCode=false&&serverTimezone=America/New_York"
