@@ -4,10 +4,10 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
-import java.io.BufferedWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.DriverManager;
+import java.util.Scanner;
 
 
 public class DBDriver {
@@ -16,8 +16,15 @@ public class DBDriver {
 	public static String user;
 	public static String password;
 	public static String driver;
+	public static String query;
+
+	public static Scanner in;
 
 	public static void main(String[] args) {
+		if (args.length < 4) {
+			System.out.println("Please supply the following args: <url> <username> <password> <driver>");
+			System.exit(1);
+		}
 		System.out.println("main called with the following args: ");
 		for (String arg : args) {
 			System.out.println(arg);
@@ -26,7 +33,32 @@ public class DBDriver {
 		user = args[1];
 		password = args[2];
 		driver = args[3];
-		TestQuery();
+
+		in = new Scanner(System.in);
+
+		// Main control loop
+		do {
+			System.out.println("Please input your query (q to exit)");
+			query = in.nextLine();
+
+			query = query.toUpperCase();
+
+			switch (query) {
+				case ("Q") :{ 
+					System.out.println("Exiting");
+				}
+				break;
+
+				case ("TEST") : {
+					TestQuery();
+				} break;
+
+				default: {
+					System.out.println("Unrecognized query, please try again");
+				} break;
+			}
+		} while (! query.equalsIgnoreCase("Q"));
+		System.exit(0);
 	}
 
 	public static void TestQuery() {
