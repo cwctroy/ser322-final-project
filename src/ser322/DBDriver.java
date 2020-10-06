@@ -3,7 +3,6 @@ package ser322;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
-import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -245,6 +244,8 @@ public class DBDriver {
 		} catch (SQLIntegrityConstraintViolationException e) {
 			if (e.getMessage().contains("FOREIGN KEY (`home_city`)")) {
 				System.out.println("Team city " + teamCity + " does not exist in CITY table. Please try again.");
+			} else {
+				System.out.println(e.getMessage());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -295,6 +296,8 @@ public class DBDriver {
 		} catch (SQLIntegrityConstraintViolationException e) {
 			if (e.getMessage().contains("FOREIGN KEY (`team_name`)")) {
 				System.out.println("Team name " + teamName + " does not exist in TEAM table. Please try again.");
+			} else {
+				System.out.println(e.getMessage());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -309,11 +312,111 @@ public class DBDriver {
 	}
 
 	public static void InsertGame() {
-		System.out.println("Function not yet implemented");
+		System.out.println("Please input city where game occured");
+		String gameCity = in.nextLine();
+		System.out.println("Please input game start date as YYYY-MM-DD");
+		String gameStart = in.nextLine();
+		System.out.println("Please input home team name");
+		String homeTeam = in.nextLine();
+		System.out.println("Please input away team name");
+		String awayTeam = in.nextLine();
+		Connection conn = null;
+		Statement stmt = null;
+		int result = 0;
+		try {
+			Class.forName(driver);
+			conn = DriverManager.getConnection(url, user, password);
+			conn.setAutoCommit(false);
+			stmt = conn.createStatement();
+			result = stmt.executeUpdate("insert into game values ('" + gameCity + "', '" + gameStart + 
+					"', '" + homeTeam + "', '" + awayTeam + "');");
+			conn.commit();
+			if (result > 0) {
+				System.out.println("SUCCESS");
+			} else {
+				System.out.println("FAILURE");
+			}
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.out.println(e.getMessage());
+			if (e.getMessage().contains("FOREIGN KEY (`home_team`)")) {
+				System.out.println("Team name " + homeTeam + " does not exist in TEAM table. Please try again.");
+			} else if (e.getMessage().contains("FOREIGN KEY (`away_team`)")) {
+				System.out.println("Team name " + awayTeam + " does not exist in TEAM table. Please try again.");
+			} else if (e.getMessage().contains("FOREGIN KEY (`city`)")) {
+				System.out.println("City " + gameCity + " does not exist in CITY table. Please try again.");
+			} else {
+				System.out.println(e.getMessage());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null) conn.close();
+				if (stmt != null) stmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public static void InsertScore() {
-		System.out.println("Function not yet implemented");
+		System.out.println("Please input game start date as YYYY-MM-DD");
+		String scoreDate = in.nextLine();
+		System.out.println("Please input city where game occured");
+		String scoreCity = in.nextLine();
+		System.out.println("Please input winning team name");
+		String winTeam = in.nextLine();
+		System.out.println("Please input losing team name");
+		String loseTeam = in.nextLine();
+		System.out.println("Please input winning team score");
+		String winScore = in.nextLine();
+		System.out.println("Please input losing team score");
+		String loseScore = in.nextLine();
+		Connection conn = null;
+		Statement stmt = null;
+		int result = 0;
+		try {
+			Class.forName(driver);
+			conn = DriverManager.getConnection(url, user, password);
+			conn.setAutoCommit(false);
+			stmt = conn.createStatement();
+			result = stmt.executeUpdate("insert into score values ('" + scoreDate + "', '" + scoreCity + 
+					"', '" + winTeam + "', '" + loseTeam + "', '" + winScore + "', '" + loseScore + "');");
+			conn.commit();
+			if (result > 0) {
+				System.out.println("SUCCESS");
+			} else {
+				System.out.println("FAILURE");
+			}
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.out.println(e.getMessage());
+			if (e.getMessage().contains("FOREIGN KEY (`date`)")) {
+				System.out.println("Date " + scoreDate + " does not exist in GAME table. Please try again.");
+			} else if (e.getMessage().contains("FOREIGN KEY (`city`)")) {
+				System.out.println("City name " + scoreCity + " does not exist in CITY table. Please try again.");
+			} else if (e.getMessage().contains("FOREGIN KEY (`winning_team`)")) {
+				System.out.println("Team name " + winTeam + " does not exist in TEAM table. Please try again.");
+			} else if (e.getMessage().contains("FOREGIN KEY (`losing_team`)")) {
+				System.out.println("Team name " + loseTeam + " does not exist in TEAM table. Please try again.");
+			} else {
+				System.out.println(e.getMessage());
+			}
+		} catch (SQLException e) {
+			if (e.getMessage().contains("Incorrect integer")) {
+				System.out.println("Winning and losing scores must be integers. Please try again.");
+			} else {
+				System.out.println(e.getMessage());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null) conn.close();
+				if (stmt != null) stmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	//DELETE FUNCTIONS
