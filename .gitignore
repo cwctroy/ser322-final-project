@@ -3,3 +3,4 @@
 
 # java specific
 **/*.class
+/bin/
