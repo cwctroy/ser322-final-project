@@ -1,4 +1,3 @@
-// testing
 package ser322;
 
 import java.sql.ResultSet;
@@ -269,7 +268,6 @@ public class DBDriver {
 		String teamStart = in.nextLine();
 		System.out.println("Please input player team end date as YYYY-MM-DD or null if still active");
 		String teamEnd = in.nextLine();
-		if (teamEnd.equalsIgnoreCase("null")) teamEnd = null;
 		System.out.println("Please input name of team");
 		String teamName = in.nextLine();
 		Connection conn = null;
@@ -280,8 +278,14 @@ public class DBDriver {
 			conn = DriverManager.getConnection(url, user, password);
 			conn.setAutoCommit(false);
 			stmt = conn.createStatement();
-			result = stmt.executeUpdate("insert into player values ('" + playerName + "', '" + playerDOB + 
-					"', '" + teamStart + "', '" + teamEnd + "', '" + teamName + "');");
+			if (teamEnd.equalsIgnoreCase("null") || teamEnd.trim().isEmpty()) {
+				// null team end
+				result = stmt.executeUpdate("insert into player values ('" + playerName + "', '" + playerDOB + 
+						"', '" + teamStart + "', null, '" + teamName + "');");
+			} else {
+				result = stmt.executeUpdate("insert into player values ('" + playerName + "', '" + playerDOB + 
+						"', '" + teamStart + "', '" + teamEnd + "', '" + teamName + "');");
+			}
 			conn.commit();
 			if (result > 0) {
 				System.out.println("SUCCESS");
