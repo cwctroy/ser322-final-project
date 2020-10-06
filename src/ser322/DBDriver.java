@@ -448,7 +448,7 @@ public class DBDriver {
 		Statement stmt = null;
 		Connection conn = null;
 
-		int numColumns;
+		int rCount = 0;
 
 		try {
 			Class.forName(driver);
@@ -458,15 +458,37 @@ public class DBDriver {
 			stmt = conn.createStatement();
 
 			rs = stmt.executeQuery("Select * from " + table + ";");
-			md = rs.getMetaData();
-			numColumns = md.getColumnCount();
-
-			while (rs.next()) {
-				for (int i = 1; i <= numColumns; i++) {
-					System.out.print(rs.getString(i) + "\t");
+			// Get meta data from the results set for column numbers and names
+			ResultSetMetaData rsmd = rs.getMetaData();
+			int rsColumns = rsmd.getColumnCount();
+			// Print the column headers, starting at 1 because it is not 0-indexed 
+			int colWidth;
+			// We are looping through each column to get width and label then using printf to ensure we space each column for longest possible attribute
+			for (int i = 1; i <= rsColumns; i++) {
+				colWidth = rsmd.getColumnDisplaySize(i);
+				System.out.printf("%-" + colWidth + "s\t", rsmd.getColumnLabel(i));
+			}
+			System.out.println();			
+			while(rs.next()) {
+				// int i starts at 1 because the rs is not 0-indexed
+				for (int i = 1; i <= rsColumns; i++) {
+					colWidth = rsmd.getColumnDisplaySize(i);
+					// Once again using the printf to ensure there is space in the columns
+					System.out.printf("%-" + colWidth + "s\t", rs.getString(i));
 				}
 				System.out.println();
+				rCount++;
 			}
+			System.out.println("Returned " + rCount + " rows");
+//			md = rs.getMetaData();
+//			numColumns = md.getColumnCount();
+//
+//			while (rs.next()) {
+//				for (int i = 1; i <= numColumns; i++) {
+//					System.out.print(rs.getString(i) + "\t");
+//				}
+//				System.out.println();
+//			}
 		}
 		catch (Exception exc) {
 			exc.printStackTrace();
