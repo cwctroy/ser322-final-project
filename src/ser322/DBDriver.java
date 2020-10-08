@@ -210,8 +210,9 @@ public class DBDriver {
           conn.rollback();
           conn.close();
         }
-        if (stmt != null)
+        if (stmt != null) {
           stmt.close();
+        }
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -232,8 +233,8 @@ public class DBDriver {
       conn.setAutoCommit(false);
       stmt = conn.createStatement();
       result = stmt.executeUpdate("insert into team values ('" + teamName + "', '" + teamCity + "');");
-      conn.commit();
       if (result > 0) {
+        conn.commit();
         System.out.println("SUCCESS");
       } else {
         System.out.println("FAILURE");
@@ -248,8 +249,10 @@ public class DBDriver {
       e.printStackTrace();
     } finally {
       try {
-        if (conn != null)
+        if (conn != null) {
+          conn.rollback();
           conn.close();
+        }
         if (stmt != null)
           stmt.close();
       } catch (Exception e) {
@@ -285,8 +288,8 @@ public class DBDriver {
         result = stmt.executeUpdate("insert into player values ('" + playerName + "', '" + playerDOB + "', '"
             + teamStart + "', '" + teamEnd + "', '" + teamName + "');");
       }
-      conn.commit();
       if (result > 0) {
+        conn.commit();
         System.out.println("SUCCESS");
       } else {
         System.out.println("FAILURE");
@@ -301,10 +304,13 @@ public class DBDriver {
       e.printStackTrace();
     } finally {
       try {
-        if (conn != null)
+        if (conn != null) {
+          conn.rollback();
           conn.close();
-        if (stmt != null)
+        }
+        if (stmt != null) {
           stmt.close();
+        }
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -330,8 +336,8 @@ public class DBDriver {
       stmt = conn.createStatement();
       result = stmt.executeUpdate(
           "insert into game values ('" + gameCity + "', '" + gameStart + "', '" + homeTeam + "', '" + awayTeam + "');");
-      conn.commit();
       if (result > 0) {
+        conn.commit();
         System.out.println("SUCCESS");
       } else {
         System.out.println("FAILURE");
@@ -351,8 +357,10 @@ public class DBDriver {
       e.printStackTrace();
     } finally {
       try {
-        if (conn != null)
+        if (conn != null) {
+          conn.rollback();
           conn.close();
+        }
         if (stmt != null)
           stmt.close();
       } catch (Exception e) {
@@ -384,8 +392,8 @@ public class DBDriver {
       stmt = conn.createStatement();
       result = stmt.executeUpdate("insert into score values ('" + scoreDate + "', '" + scoreCity + "', '" + winTeam
           + "', '" + loseTeam + "', '" + winScore + "', '" + loseScore + "');");
-      conn.commit();
       if (result > 0) {
+        conn.commit();
         System.out.println("SUCCESS");
       } else {
         System.out.println("FAILURE");
@@ -413,8 +421,10 @@ public class DBDriver {
       e.printStackTrace();
     } finally {
       try {
-        if (conn != null)
+        if (conn != null) {
+          conn.rollback();
           conn.close();
+        }
         if (stmt != null)
           stmt.close();
       } catch (Exception e) {
@@ -447,7 +457,6 @@ public class DBDriver {
   // LIST ALL IN TABLE
   public static void ListTable(String table) {
     ResultSet rs = null;
-    ResultSetMetaData md = null;
     Statement stmt = null;
     Connection conn = null;
 
