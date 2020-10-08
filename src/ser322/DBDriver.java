@@ -84,6 +84,13 @@ public class DBDriver {
         }
           break;
 
+        case ("SQL"): {
+          System.out.println("Please input your query");
+          String queryString = in.nextLine();
+          CustomQuery(queryString);
+        }
+        break;
+
         default: {
           System.out.println("Unrecognized query, please try again, or type help to see a list of accepted commands");
         }
@@ -161,7 +168,7 @@ public class DBDriver {
     }
 
     System.out.println("You can use the following commands: \n" + "list, add, delete\n"
-        + "followed by the table you wish to access.\n" + "You can also type your own SQL query");
+        + "followed by the table you wish to access.\n" + "Type sql to input your own query.");
   }
 
   public static void AddValues(String tableName) {
@@ -514,6 +521,39 @@ public class DBDriver {
           conn.close();
       } catch (SQLException se) {
         se.printStackTrace();
+      }
+    }
+  }
+
+  private static void CustomQuery(String queryString){
+    Connection conn = null;
+    Statement stmt = null;
+    boolean success;
+    try {
+      Class.forName(driver);
+      conn = DriverManager.getConnection(url, user, password);
+      conn.setAutoCommit(false);
+      stmt = conn.createStatement();
+      success = stmt.execute(queryString);
+      if (success) {
+        System.out.println("SUCCESS");
+        conn.commit();
+      } else {
+        System.out.println("FAILURE");
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      try {
+        if (conn != null) {
+          conn.rollback();
+          conn.close();
+        }
+        if (stmt != null) {
+          stmt.close();
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
       }
     }
   }
