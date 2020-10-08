@@ -3,3 +3,7 @@
 
 # java specific
 **/*.class
+
+# Project files
+**.project
+**.classpath
