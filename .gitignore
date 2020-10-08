@@ -1,1 +1,9 @@
-/bin/
+# Google Drive files
+**/*.ini
+
+# java specific
+**/*.class
+
+# Project files
+**.project
+**.classpath
