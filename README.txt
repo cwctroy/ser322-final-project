@@ -1,6 +1,8 @@
 ## DATABASE SETUP ""
 To set up, run sports.sql in your local instance (such as mysql workbench) to create the schema.
-You can then execute run.sh to begin the interactive session.
+You can then execute run.sh to begin the interactive session. You can then run sample_data.sql
+to prepopulate the db with test data, or you can follow the interactive system to add the values 
+one by one
 
 ## EXECUTION VIA RUN.SH ##
 This program can be run via the run.sh script assuming the system supports bash. 
