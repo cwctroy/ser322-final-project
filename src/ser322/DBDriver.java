@@ -91,6 +91,19 @@ public class DBDriver {
         }
         break;
 
+        case ("DELETE"): {
+          if (query.length != 2) {
+            System.out.println("Incorrect format, please enher: delete <tableName>");
+          } else {
+            if (Arrays.asList(TABLES).contains(query[1].toUpperCase())) {
+              DeleteValues(query[1]);
+            } else {
+              System.out.println("Table name not found. TABLES: " + Arrays.toString(TABLES));
+            }
+          }
+        }
+        break;
+
         default: {
           System.out.println("Unrecognized query, please try again, or type help to see a list of accepted commands");
         }
@@ -184,7 +197,40 @@ public class DBDriver {
     } else if (tableName.equals("score")) {
       InsertScore();
     } else {
-      System.out.println("Error. No valid table name found. Please try again.");
+      System.out.println("Error. No valid table found for " + tableName + ". Please try again.");
+    }
+  }
+
+  public static void DeleteValues(String tableName) {
+    switch (tableName.toUpperCase()) {
+      case ("CITY"): {
+        DeleteCity();
+      }
+      break;
+
+      case ("TEAM"): {
+        DeleteTeam();
+      }
+      break;
+
+      case ("GAME"): {
+        DeleteGame();
+      }
+      break;
+
+      case ("PLAYER"): {
+        DeletePlayer();
+      }
+      break;
+
+      case ("SCORE"): {
+        DeleteScore();
+      }
+      break;
+
+      default : {
+        System.out.println("Error. No valid table found for " + tableName + ". Please try again");
+      }
     }
   }
 
@@ -442,23 +488,206 @@ public class DBDriver {
 
   // DELETE FUNCTIONS
   public static void DeleteCity() {
-    System.out.println("Function not yet implemented");
+    Connection conn = null;
+    Statement stmt = null;
+    int result = 0;
+    String cityName;
+    String state;
+    System.out.println("Please input name of city");
+    cityName = in.nextLine();
+    System.out.println("Please input state as 2 chars (e.g. WA, OK, etc.)");
+    state = in.nextLine();
+    try {
+      Class.forName(driver);
+      conn = DriverManager.getConnection(url, user, password);
+      conn.setAutoCommit(false);
+      stmt = conn.createStatement();
+      result = stmt.executeUpdate("DELETE FROM CITY WHERE CITY.CITY_NAME = \"" + cityName + "\" AND CITY.STATE = \"" + state + "\";");
+      if (result > 0) {
+        System.out.println("SUCCESS");
+        conn.commit();
+      } else {
+        System.out.println("FAILURE");
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      try {
+        if (conn != null) {
+          conn.rollback();
+          conn.close();
+        }
+        if (stmt != null) {
+          stmt.close();
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    } 
   }
 
   public static void DeleteTeam() {
-    System.out.println("Function not yet implemented");
+    Connection conn = null;
+    Statement stmt = null;
+    int result = 0;
+    String teamName;
+    System.out.println("Please input name of team");
+    teamName = in.nextLine();
+    try {
+      Class.forName(driver);
+      conn = DriverManager.getConnection(url, user, password);
+      conn.setAutoCommit(false);
+      stmt = conn.createStatement();
+      result = stmt.executeUpdate("DELETE FROM TEAM WHERE TEAM.TEAM_NAME = \"" + teamName.toUpperCase() + 
+      "\";");
+      if (result > 0) {
+        System.out.println("SUCCESS");
+        conn.commit();
+      } else {
+        System.out.println("FAILURE");
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      try {
+        if (conn != null) {
+          conn.rollback();
+          conn.close();
+        }
+        if (stmt != null) {
+          stmt.close();
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    } 
   }
 
   public static void DeletePlayer() {
-    System.out.println("Function not yet implemented");
+    Connection conn = null;
+    Statement stmt = null;
+    int result = 0;
+    String playerDOB;
+    String playerName;
+    String team;
+    System.out.println("Please input player name");
+    playerName = in.nextLine();
+    System.out.println("Please input player birth date as YYYY-MM-DD");
+    playerDOB = in.nextLine();
+    System.out.println("Please input team name");
+    team = in.nextLine();
+    try {
+      Class.forName(driver);
+      conn = DriverManager.getConnection(url, user, password);
+      conn.setAutoCommit(false);
+      stmt = conn.createStatement();
+      result = stmt.executeUpdate("DELETE FROM PLAYER WHERE PLAYER.PLAYER_NAME = \"" +playerName.toUpperCase() + 
+      "\" AND PLAYER.DOB = \"" + playerDOB + 
+      "\" AND PLAYER.TEAM_NAME = \"" + team.toUpperCase() +
+      "\";");
+      if (result > 0) {
+        System.out.println("SUCCESS");
+        conn.commit();
+      } else {
+        System.out.println("FAILURE");
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      try {
+        if (conn != null) {
+          conn.rollback();
+          conn.close();
+        }
+        if (stmt != null) {
+          stmt.close();
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    } 
   }
 
   public static void DeleteGame() {
-    System.out.println("Function not yet implemented");
+    Connection conn = null;
+    Statement stmt = null;
+    int result = 0;
+    String date;
+    String cityName;
+    System.out.println("Please input game start date as YYYY-MM-DD");
+    date = in.nextLine();
+    System.out.println("Please input city where game occured");
+    cityName = in.nextLine();
+    try {
+      Class.forName(driver);
+      conn = DriverManager.getConnection(url, user, password);
+      conn.setAutoCommit(false);
+      stmt = conn.createStatement();
+      result = stmt.executeUpdate("DELETE FROM GAME WHERE GAME.DATE = \"" + date.toUpperCase() + 
+      "\" AND GAME.CITY = \"" + cityName.toUpperCase() + 
+      "\";");
+      if (result > 0) {
+        System.out.println("SUCCESS");
+        conn.commit();
+      } else {
+        System.out.println("FAILURE");
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      try {
+        if (conn != null) {
+          conn.rollback();
+          conn.close();
+        }
+        if (stmt != null) {
+          stmt.close();
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    } 
   }
 
   public static void DeleteScore() {
-    System.out.println("Function not yet implemented");
+    Connection conn = null;
+    Statement stmt = null;
+    int result = 0;
+    String date;
+    String cityName;
+    System.out.println("Please input game start date as YYYY-MM-DD");
+    date = in.nextLine();
+    System.out.println("Please input city where game occured");
+    cityName = in.nextLine();
+    try {
+      Class.forName(driver);
+      conn = DriverManager.getConnection(url, user, password);
+      conn.setAutoCommit(false);
+      stmt = conn.createStatement();
+      result = stmt.executeUpdate("DELETE FROM SCORE WHERE SCORE.DATE = \"" + date.toUpperCase() + 
+      "\" AND SCORE.CITY = \"" + cityName.toUpperCase() + 
+      "\";");
+      if (result > 0) {
+        System.out.println("SUCCESS");
+        conn.commit();
+      } else {
+        System.out.println("FAILURE");
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      try {
+        if (conn != null) {
+          conn.rollback();
+          conn.close();
+        }
+        if (stmt != null) {
+          stmt.close();
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    } 
   }
 
   // LIST ALL IN TABLE
