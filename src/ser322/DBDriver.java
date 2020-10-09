@@ -93,12 +93,35 @@ public class DBDriver {
 
         case ("DELETE"): {
           if (query.length != 2) {
-            System.out.println("Incorrect format, please enher: delete <tableName>");
+            System.out.println("Incorrect format, please enter: delete <tableName>");
           } else {
             if (Arrays.asList(TABLES).contains(query[1].toUpperCase())) {
               DeleteValues(query[1]);
             } else {
               System.out.println("Table name not found. TABLES: " + Arrays.toString(TABLES));
+            }
+          }
+        }
+        break;
+
+        case ("GET"): {
+          if (query.length != 2) {
+            System.out.println("Incorrect format, please enter: get <value>");
+          } else {
+            switch (query[1].toUpperCase()) {
+              case ("RECORD"): {
+                getTeamRecord();
+              }
+              break;
+
+              case ("ROSTER"): {
+                GetRoster();
+              }
+              break;
+
+              default: {
+                System.out.println("Value " + query[1] + " not found. Please enter get <value>");
+              }
             }
           }
         }
@@ -181,7 +204,7 @@ public class DBDriver {
     }
 
     System.out.println("You can use the following commands: \n" + "list, add, delete\n"
-        + "followed by the table you wish to access.\n" + "Type sql to input your own query.");
+        + "followed by the table you wish to access.\n" + "Type sql to input your own query.\n" + "Type get <value> to see team rosters or team records.");
   }
 
   public static void AddValues(String tableName) {
@@ -729,15 +752,124 @@ public class DBDriver {
         rCount++;
       }
       System.out.println("Returned " + rCount + " rows");
-      // md = rs.getMetaData();
-      // numColumns = md.getColumnCount();
-      //
-      // while (rs.next()) {
-      // for (int i = 1; i <= numColumns; i++) {
-      // System.out.print(rs.getString(i) + "\t");
-      // }
-      // System.out.println();
-      // }
+    } catch (Exception exc) {
+      exc.printStackTrace();
+    } finally {
+      try {
+        if (rs != null)
+          rs.close();
+        if (stmt != null)
+          stmt.close();
+        if (conn != null)
+          conn.close();
+      } catch (SQLException se) {
+        se.printStackTrace();
+      }
+    }
+  }
+
+  public static void getTeamRecord() {
+    ResultSet rs = null;
+    Statement stmt = null;
+    Connection conn = null;
+
+    int rCount = 0;
+    
+    String teamName;
+    System.out.println("Please input team name");
+    teamName = in.nextLine().toUpperCase();
+
+    try {
+      Class.forName(driver);
+
+      conn = DriverManager.getConnection(url, user, password);
+
+      stmt = conn.createStatement();
+
+      rs = stmt.executeQuery("SELECT *, count(winning_team = \"" + teamName + "\") as wins," 
+        + "count(losing_team = \"" + teamName + "\") as losses FROM SCORE WHERE winning_team = \"" + teamName 
+        + "\" OR losing_team = \"" + teamName + "\";");
+      // Get meta data from the results set for column numbers and names
+      ResultSetMetaData rsmd = rs.getMetaData();
+      int rsColumns = rsmd.getColumnCount();
+      // Print the column headers, starting at 1 because it is not 0-indexed
+      int colWidth;
+      // We are looping through each column to get width and label then using printf
+      // to ensure we space each column for longest possible attribute
+      for (int i = 1; i <= rsColumns; i++) {
+        colWidth = rsmd.getColumnDisplaySize(i);
+        System.out.printf("%-" + colWidth + "s\t", rsmd.getColumnLabel(i));
+      }
+      System.out.println();
+      while (rs.next()) {
+        // int i starts at 1 because the rs is not 0-indexed
+        for (int i = 1; i <= rsColumns; i++) {
+          colWidth = rsmd.getColumnDisplaySize(i);
+          // Once again using the printf to ensure there is space in the columns
+          System.out.printf("%-" + colWidth + "s\t", rs.getString(i));
+        }
+        System.out.println();
+        rCount++;
+      }
+      System.out.println("Returned " + rCount + " rows");
+    } catch (Exception exc) {
+      exc.printStackTrace();
+    } finally {
+      try {
+        if (rs != null)
+          rs.close();
+        if (stmt != null)
+          stmt.close();
+        if (conn != null)
+          conn.close();
+      } catch (SQLException se) {
+        se.printStackTrace();
+      }
+    }
+  }
+
+  public static void GetRoster() {
+    ResultSet rs = null;
+    Statement stmt = null;
+    Connection conn = null;
+
+    int rCount = 0;
+    
+    String teamName;
+    System.out.println("Please input team name");
+    teamName = in.nextLine().toUpperCase();
+
+    try {
+      Class.forName(driver);
+
+      conn = DriverManager.getConnection(url, user, password);
+
+      stmt = conn.createStatement();
+
+      rs = stmt.executeQuery("SELECT * FROM PLAYER WHERE PLAYER.team_name = \"" + teamName + "\" AND PLAYER.team_end_date IS NULL;");
+      // Get meta data from the results set for column numbers and names
+      ResultSetMetaData rsmd = rs.getMetaData();
+      int rsColumns = rsmd.getColumnCount();
+      // Print the column headers, starting at 1 because it is not 0-indexed
+      int colWidth;
+      // We are looping through each column to get width and label then using printf
+      // to ensure we space each column for longest possible attribute
+      for (int i = 1; i <= rsColumns; i++) {
+        colWidth = rsmd.getColumnDisplaySize(i);
+        System.out.printf("%-" + colWidth + "s\t", rsmd.getColumnLabel(i));
+      }
+      System.out.println();
+      while (rs.next()) {
+        // int i starts at 1 because the rs is not 0-indexed
+        for (int i = 1; i <= rsColumns; i++) {
+          colWidth = rsmd.getColumnDisplaySize(i);
+          // Once again using the printf to ensure there is space in the columns
+          System.out.printf("%-" + colWidth + "s\t", rs.getString(i));
+        }
+        System.out.println();
+        rCount++;
+      }
+      System.out.println("Returned " + rCount + " rows");
     } catch (Exception exc) {
       exc.printStackTrace();
     } finally {
