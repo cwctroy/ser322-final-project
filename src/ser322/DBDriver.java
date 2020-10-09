@@ -51,11 +51,6 @@ public class DBDriver {
         }
           break;
 
-        case ("TEST"): {
-          TestQuery();
-        }
-          break;
-
         case ("HELP"):
         case ("USAGE"): {
           PrintUsage();
@@ -136,68 +131,7 @@ public class DBDriver {
     System.exit(0);
   }
 
-  public static void TestQuery() {
-    ResultSet rs = null;
-    Statement stmt = null;
-    Connection conn = null;
-    int rCount = 0;
-
-    try {
-      Class.forName(driver);
-
-      conn = DriverManager.getConnection(url, user, password);
-
-      stmt = conn.createStatement();
-
-      rs = stmt.executeQuery("Select * from Player");
-
-      // Get meta data from the results set for column numbers and names
-      ResultSetMetaData rsmd = rs.getMetaData();
-      int rsColumns = rsmd.getColumnCount();
-      // Print the column headers, starting at 1 because it is not 0-indexed
-      int colWidth;
-      // We are looping through each column to get width and label then using printf
-      // to ensure we space each column for longest possible attribute
-      for (int i = 1; i <= rsColumns; i++) {
-        colWidth = rsmd.getColumnDisplaySize(i);
-        System.out.printf("%-" + colWidth + "s\t", rsmd.getColumnLabel(i));
-      }
-      System.out.println();
-      while (rs.next()) {
-        // int i starts at 1 because the rs is not 0-indexed
-        for (int i = 1; i <= rsColumns; i++) {
-          colWidth = rsmd.getColumnDisplaySize(i);
-          // Once again using the printf to ensure there is space in the columns
-          System.out.printf("%-" + colWidth + "s\t", rs.getString(i));
-        }
-        System.out.println();
-        rCount++;
-      }
-      System.out.println("Returned " + rCount + " rows");
-      // while (rs.next()) {
-      // System.out.print(rs.getString(1) + "\t ");
-      // System.out.print(rs.getDate(2) + "\t ");
-      // System.out.print(rs.getDate(3) + "\t ");
-      // System.out.print(rs.getDate(4) + "\t ");
-      // System.out.println(rs.getString(5) + "\t ");
-      // }
-    } catch (Exception exc) {
-      exc.printStackTrace();
-    } finally {
-      try {
-        if (rs != null)
-          rs.close();
-        if (stmt != null)
-          stmt.close();
-        if (conn != null)
-          conn.close();
-      } catch (SQLException se) {
-        se.printStackTrace();
-      }
-    }
-  }
-
-  public static void PrintUsage() {
+   public static void PrintUsage() {
     System.out.println("This database has the following tables: ");
     for (String table : TABLES) {
       System.out.println(table);
